@@ -1,0 +1,106 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v25="http://fedex.com/ws/ship/v26">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ProcessShipmentRequest>
+         <WebAuthenticationDetail>
+            <ParentCredential>
+               <Key>INPUT YOUR INFORMATION</Key>
+               <Password>INPUT YOUR INFORMATION</Password>
+            </ParentCredential>
+            <UserCredential>
+               <Key>INPUT YOUR INFORMATION</Key>
+               <Password>INPUT YOUR INFORMATION</Password>
+            </UserCredential>
+         </WebAuthenticationDetail>
+         <ClientDetail>
+            <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
+            <MeterNumber>INPUT YOUR INFORMATION</MeterNumber>
+         </ClientDetail>
+         <TransactionDetail>
+            <CustomerTransactionId>Ship_International_basic</CustomerTransactionId>
+         </TransactionDetail>
+         <Version>
+            <ServiceId>ship</ServiceId>
+            <Major>26</Major>
+            <Intermediate>0</Intermediate>
+            <Minor>0</Minor>
+         </Version>
+         <RequestedShipment>
+            <ShipTimestamp>2019-07-17T12:34:56-06:00</ShipTimestamp>
+            <DropoffType>REGULAR_PICKUP</DropoffType>
+            <ServiceType>STANDARD_OVERNIGHT</ServiceType>
+            <PackagingType>YOUR_PACKAGING</PackagingType>
+            <Shipper>
+               <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
+               <Contact>
+                  <PersonName>INPUT YOUR INFORMATION</PersonName>
+                  <CompanyName>Syntel</CompanyName>
+                  <PhoneNumber>INPUT YOUR INFORMATION</PhoneNumber>
+                  <EMailAddress>abhay_palaskar@syntelinc.com</EMailAddress>
+               </Contact>
+               <Address>
+                  <StreetLines>INPUT YOUR INFORMATION</StreetLines>
+                  <City>MEMPHIS</City>
+                  <StateOrProvinceCode>TN</StateOrProvinceCode>
+                  <PostalCode>38117</PostalCode>
+                  <CountryCode>US</CountryCode>
+               </Address>
+            </Shipper>
+            <Recipient>
+               <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
+               <Contact>
+                  <PersonName>INPUT YOUR INFORMATION</PersonName>
+                  <CompanyName>Syntel</CompanyName>
+                  <PhoneNumber>INPUT YOUR INFORMATION</PhoneNumber>
+                  <EMailAddress>abhay_palaskar@syntelinc.com</EMailAddress>
+               </Contact>
+               <Address>
+                  <StreetLines>Recipient Address Line 1</StreetLines>
+                  <StreetLines>Recipient Address Line 2</StreetLines>
+                  <City>Collierville</City>
+                  <StateOrProvinceCode>TN</StateOrProvinceCode>
+                  <PostalCode>38017</PostalCode>
+                  <CountryCode>US</CountryCode>
+               </Address>
+            </Recipient>
+            <ShippingChargesPayment>
+               <PaymentType>SENDER</PaymentType>
+               <Payor>
+                  <ResponsibleParty>
+                     <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
+                     <Contact>
+                        <PersonName>Abhay_Recipient</PersonName>
+                        <EMailAddress>abhay_palaskar@syntelinc.com</EMailAddress>
+                     </Contact>
+                  </ResponsibleParty>
+               </Payor>
+            </ShippingChargesPayment>
+            <LabelSpecification>
+               <LabelFormatType>COMMON2D</LabelFormatType>
+               <ImageType>PNG</ImageType>
+            </LabelSpecification>
+            <RateRequestTypes>LIST</RateRequestTypes>
+            <PackageCount>1</PackageCount>
+            <RequestedPackageLineItems>
+               <SequenceNumber>1</SequenceNumber>
+               <Weight>
+                  <Units>LB</Units>
+                  <Value>40</Value>
+               </Weight>
+               <Dimensions>
+                  <Length>5</Length>
+                  <Width>5</Width>
+                  <Height>5</Height>
+                  <Units>IN</Units>
+               </Dimensions>
+               <PhysicalPackaging>BAG</PhysicalPackaging>
+               <ItemDescription>Book</ItemDescription>
+               <CustomerReferences>
+                  <CustomerReferenceType>CUSTOMER_REFERENCE</CustomerReferenceType>
+                  <Value>NAFTA_COO</Value>
+               </CustomerReferences>
+            </RequestedPackageLineItems>
+         </RequestedShipment>
+      </ProcessShipmentRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
