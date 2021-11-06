@@ -47,3 +47,6 @@ def rates():
 #    necesitamos pegarle a la api de fedex, retornar los datos, pasarlos por graphql, y hacer la response que necesitamos :v
 
 #    tenemos que armar con graphql que para cada query devuelva los valores necesarios.
+
+#    hay que ver como se puede linkear el flask con el graphql, no queda mucho vamo arriba jajaja.
+
