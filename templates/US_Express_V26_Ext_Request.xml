@@ -1,5 +1,4 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v25="http://fedex.com/ws/ship/v26">
-   <soapenv:Header/>
    <soapenv:Body>
       <ProcessShipmentRequest>
          <WebAuthenticationDetail>
