@@ -23,7 +23,6 @@
          </Version>
          <RequestedShipment>
             <DropoffType>REGULAR_PICKUP</DropoffType>
-            <ServiceType>GROUND_HOME_DELIVERY</ServiceType>
             <PackagingType>YOUR_PACKAGING</PackagingType>
             <TotalWeight>
                <Units>LB</Units>

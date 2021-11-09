@@ -3,18 +3,15 @@
    <soapenv:Body>
       <ProcessShipmentRequest>
          <WebAuthenticationDetail>
-            <ParentCredential>
-               <Key>INPUT YOUR INFORMATION</Key>
-               <Password>INPUT YOUR INFORMATION</Password>
-            </ParentCredential>
             <UserCredential>
-               <Key>INPUT YOUR INFORMATION</Key>
-               <Password>INPUT YOUR INFORMATION</Password>
+               <Key>{{ key }}</Key>
+               <Password>{{ password }}</Password>
             </UserCredential>
          </WebAuthenticationDetail>
          <ClientDetail>
-            <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
-            <MeterNumber>INPUT YOUR INFORMATION</MeterNumber>
+            <AccountNumber>{{ account_number }}</AccountNumber>
+            <MeterNumber>{{ meter_number }}</MeterNumber>
+            <SoftwareId>WSXI</SoftwareId>
          </ClientDetail>
          <TransactionDetail>
             <CustomerTransactionId>Ship_International_basic</CustomerTransactionId>

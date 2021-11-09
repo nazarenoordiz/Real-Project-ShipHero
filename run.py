@@ -1,30 +1,24 @@
 from flask import Flask, redirect, url_for, render_template, request, render_template_string
 import graphene
-from graphene import ObjectType, String, Schema
+from graphene import ObjectType, String, Schema, List
 import xmltodict, json
 import requests
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
 
 class Query(ObjectType):
-    # this defines a Field `hello` in our Schema with a single Argument `name`
-    rate = String(
-        cose=String(default_value="ERROR"),
-        service_name=String(default_value="ERROR"),
-        service_used=String(default_value="ERROR"),
-        label_pdf=String(default_value="ERROR"),
-    )
-    goodbye = String()
-
-    # our Resolver method takes the GraphQL context (root, info) as well as
-    # Argument (name) for the Field and returns data for the query Response
-    def resolve_rate(root, info, cose, service_name, service_used, label_pdf):
-        return f'Your cose: {cose}, the service name and code: {service_name}-{service_used}, and the transittime: {label_pdf}'
-
-    def resolve_goodbye(root, info):
-        return 'See ya!'
-
+    rate = graphene.String(items=String(default_value="ERROR"))
+    label = graphene.String(
+        cost=String(default_value="ERROR"),
+        service=String(default_value="ERROR"),
+        pdf=String(default_value="ERROR")        
+        )
+    def resolve_rate(root, info, items):
+        return items
+    def resolve_label(root, info, cost, service, pdf):
+        return f'Your cost: {cost}, the service name: {service}, and the pdf: {pdf}'
 
 
 schema = graphene.Schema(query=Query)
@@ -32,34 +26,51 @@ schema = graphene.Schema(query=Query)
 
 def rates():
     url = 'https://wsbeta.fedex.com:443/web-services'
-    template_data = {
-        'key': '4UK71Z09zHJvRHux',
-        'password': 'RN2TO13sdEikMHyYkrccW0qW0',
-        'account_number': '510087100',
-        'meter_number': '119242929'
-    }
     headers = {
         'Content-Type': 'text/xml'
         }
+    time = datetime.utcnow() + timedelta(hours=1)
+    futureTime = time.isoformat()
     post_data = render_template('RateService_getRates_Request.xml', key='4UK71Z09zHJvRHux',
         password='DY6sq7EGkRcraIIC6DoefnvQc',
         account_number=510087100,
-        meter_number=119242929)
+        meter_number=119242929,
+        time = futureTime)
     req = requests.post(url, data=post_data, headers=headers)
     obj = xmltodict.parse(req.content)
-    ServiceDescription = obj["SOAP-ENV:Envelope"]["SOAP-ENV:Body"]["RateReply"]["RateReplyDetails"]["ServiceDescription"]
-    response_dict = {
-        'cose': 'None',
-        'service_name': str(ServiceDescription['Description']),
-        'service_code': str(ServiceDescription['Code']),
-        'transit_time': None
-    }
-    query_string = '{{ rate(service_name: "{name}" cose: "{cose}") }}'.format(
-        cose=response_dict['cose'], name=response_dict['service_name'])
-    result = schema.execute(query_string)
+    ServiceDescription = obj["SOAP-ENV:Envelope"]["SOAP-ENV:Body"]["RateReply"]["RateReplyDetails"]
+    service_list = []
+    for service in ServiceDescription:
+        response_dict = {
+            'Service Name': str(service["ServiceDescription"]['Description']),
+            'Service Code': str(service["ServiceDescription"]['Code']),
+            'Cost': (service["RatedShipmentDetails"][1]['ShipmentRateDetail']['TotalNetChargeWithDutiesAndTaxes']['Amount']),
+            'Transit Time': 'None'
+        }
+        service_list.append(response_dict)
+    
+
+    query = '{{ rate(items: "{service_list}") }}'.format(
+        service_list=service_list)
+    result = schema.execute(query)
     return result.data['rate']
 
+schema = graphene.Schema(query=Query)
+@app.route("/label", methods=['POST'])
 
+def label():
+    url = 'https://wsbeta.fedex.com:443/web-services'
+    headers = {
+        'Content-Type': 'text/xml'
+        }
+    post_data = render_template('US_Express_V26_Ext_Request.xml', key='4UK71Z09zHJvRHux',
+        password='DY6sq7EGkRcraIIC6DoefnvQc',
+        account_number=510087100,
+        meter_number=119242929,
+        )
+    req = requests.post(url, data=post_data, headers=headers)
+    obj = xmltodict.parse(req.content)
+    return obj
 
 #    necesitamos pegarle a la api de fedex, retornar los datos, pasarlos por graphql, y hacer la response que necesitamos :v
 
