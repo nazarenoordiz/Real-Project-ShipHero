@@ -117,4 +117,3 @@ def void():
         Message=response_dict['Message'],)
     result = schema.execute(query)
     return result.data['void']
-
