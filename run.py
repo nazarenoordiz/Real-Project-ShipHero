@@ -11,14 +11,20 @@ app = Flask(__name__)
 class Query(ObjectType):
     rate = graphene.String(items=String(default_value="ERROR"))
     label = graphene.String(
-        cost=String(default_value="ERROR"),
-        service=String(default_value="ERROR"),
-        pdf=String(default_value="ERROR")        
+        ServiceName=String(default_value="ERROR"),
+        LabelCost=String(default_value="ERROR"),
+        LabelPdf=String(default_value="ERROR")        
+        )
+    void = graphene.String(
+        Status=String(default_value="ERROR"),
+        Message=String(default_value="ERROR"),     
         )
     def resolve_rate(root, info, items):
         return items
-    def resolve_label(root, info, cost, service, pdf):
-        return f'Your cost: {cost}, the service name: {service}, and the pdf: {pdf}'
+    def resolve_label(root, info, LabelCost, ServiceName, LabelPdf):
+        return f'Your service name: {ServiceName}, the cost: ${LabelCost}, and the pdf: {LabelPdf}'
+    def resolve_void(root, info, Status, Message):
+        return f'STATUS: {Status}, Message: {Message}'
 
 
 schema = graphene.Schema(query=Query)
@@ -63,18 +69,52 @@ def label():
     headers = {
         'Content-Type': 'text/xml'
         }
-    post_data = render_template('US_Express_V26_Ext_Request.xml', key='4UK71Z09zHJvRHux',
+    post_data = render_template('Fedex_Ground_home_delivery_V26_Ext_Request.xml', key='4UK71Z09zHJvRHux',
+        password='DY6sq7EGkRcraIIC6DoefnvQc',
+        account_number=510087100,
+        meter_number=119242929,
+        name = 'Nazareno',
+        number = 1238040913,
+        email = 'nazarenoe.ordiz@gmail.com'
+        )
+    req = requests.post(url, data=post_data, headers=headers)
+    obj = xmltodict.parse(req.content)
+    ServiceDescription = obj["SOAP-ENV:Envelope"]["SOAP-ENV:Body"]["ProcessShipmentReply"]["CompletedShipmentDetail"]
+    response_dict = {
+        'ServiceName': str(ServiceDescription["ServiceDescription"]['Description']),
+        'LabelCost': str(ServiceDescription['ShipmentRating']["ShipmentRateDetails"][1]['TotalNetChargeWithDutiesAndTaxes']['Amount']),
+        'LabelPdf': (ServiceDescription['CompletedPackageDetails']["Label"]['Parts']['Image']),
+    }
+    query = '{{ label(ServiceName: "{ServiceName}" LabelCost: "{LabelCost}" LabelPdf: "{LabelPdf}") }}'.format(
+        ServiceName=response_dict['ServiceName'],
+        LabelCost=response_dict['LabelCost'],
+        LabelPdf=response_dict['LabelPdf'],)
+    result = schema.execute(query)
+    return result.data['label']
+
+schema = graphene.Schema(query=Query)
+@app.route("/void", methods=['POST'])
+
+def void():
+    url = 'https://wsbeta.fedex.com:443/web-services'
+    headers = {
+        'Content-Type': 'text/xml'
+        }
+    post_data = render_template('deleteshipment_Ext_request.xml', key='4UK71Z09zHJvRHux',
         password='DY6sq7EGkRcraIIC6DoefnvQc',
         account_number=510087100,
         meter_number=119242929,
         )
     req = requests.post(url, data=post_data, headers=headers)
     obj = xmltodict.parse(req.content)
-    return obj
-
-#    necesitamos pegarle a la api de fedex, retornar los datos, pasarlos por graphql, y hacer la response que necesitamos :v
-
-#    tenemos que armar con graphql que para cada query devuelva los valores necesarios.
-
-#    hay que ver como se puede linkear el flask con el graphql, no queda mucho vamo arriba jajaja.
+    ServiceDescription = obj["SOAP-ENV:Envelope"]["SOAP-ENV:Body"]["ShipmentReply"]
+    response_dict = {
+        'Status': str(ServiceDescription["Notifications"]['Severity']),
+        'Message': str(ServiceDescription['Notifications']['Message']),
+    }
+    query = '{{ void(Status: "{Status}" Message: "{Message}") }}'.format(
+        Status=response_dict['Status'],
+        Message=response_dict['Message'],)
+    result = schema.execute(query)
+    return result.data['void']
 

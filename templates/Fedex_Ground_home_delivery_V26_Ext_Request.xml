@@ -1,5 +1,6 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v25="http://fedex.com/ws/ship/v26">
-   <soapenv:Body>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://fedex.com/ws/ship/v26">
+   <SOAP-ENV:Header/>
+   <SOAP-ENV:Body>
       <ProcessShipmentRequest>
          <WebAuthenticationDetail>
             <UserCredential>
@@ -10,7 +11,6 @@
          <ClientDetail>
             <AccountNumber>{{ account_number }}</AccountNumber>
             <MeterNumber>{{ meter_number }}</MeterNumber>
-            <SoftwareId>WSXI</SoftwareId>
          </ClientDetail>
          <TransactionDetail>
             <CustomerTransactionId>Ship_International_basic</CustomerTransactionId>
@@ -22,20 +22,20 @@
             <Minor>0</Minor>
          </Version>
          <RequestedShipment>
-            <ShipTimestamp>2019-07-17T12:34:56-06:00</ShipTimestamp>
+            <ShipTimestamp>2020-06-25T12:34:56-06:00</ShipTimestamp>
             <DropoffType>REGULAR_PICKUP</DropoffType>
-            <ServiceType>STANDARD_OVERNIGHT</ServiceType>
+            <ServiceType>GROUND_HOME_DELIVERY</ServiceType>
             <PackagingType>YOUR_PACKAGING</PackagingType>
             <Shipper>
-               <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
+               <AccountNumber>{{ account_number }}</AccountNumber>
                <Contact>
-                  <PersonName>INPUT YOUR INFORMATION</PersonName>
-                  <CompanyName>Syntel</CompanyName>
-                  <PhoneNumber>INPUT YOUR INFORMATION</PhoneNumber>
-                  <EMailAddress>abhay_palaskar@syntelinc.com</EMailAddress>
+                  <PersonName>{{ name }}</PersonName>
+                  <CompanyName>{{ name }}</CompanyName>
+                  <PhoneNumber>{{ number }}</PhoneNumber>
+                  <EMailAddress>{{ email }}</EMailAddress>
                </Contact>
                <Address>
-                  <StreetLines>INPUT YOUR INFORMATION</StreetLines>
+                  <StreetLines>Test Sender Address Line1</StreetLines>
                   <City>MEMPHIS</City>
                   <StateOrProvinceCode>TN</StateOrProvinceCode>
                   <PostalCode>38117</PostalCode>
@@ -43,37 +43,44 @@
                </Address>
             </Shipper>
             <Recipient>
-               <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
+               <AccountNumber>{{ account_number }}</AccountNumber>
                <Contact>
-                  <PersonName>INPUT YOUR INFORMATION</PersonName>
-                  <CompanyName>Syntel</CompanyName>
-                  <PhoneNumber>INPUT YOUR INFORMATION</PhoneNumber>
-                  <EMailAddress>abhay_palaskar@syntelinc.com</EMailAddress>
+                  <PersonName>{{ name }}</PersonName>
+                  <CompanyName>{{ name }}</CompanyName>
+                  <PhoneNumber>{{ number }}</PhoneNumber>
+                  <EMailAddress>{{ email }}</EMailAddress>
                </Contact>
                <Address>
-                  <StreetLines>Recipient Address Line 1</StreetLines>
-                  <StreetLines>Recipient Address Line 2</StreetLines>
-                  <City>Collierville</City>
-                  <StateOrProvinceCode>TN</StateOrProvinceCode>
-                  <PostalCode>38017</PostalCode>
+                  <StreetLines>Recipient Address Line1</StreetLines>
+                  <City>Texas</City>
+                  <StateOrProvinceCode>TX</StateOrProvinceCode>
+                  <PostalCode>73301</PostalCode>
                   <CountryCode>US</CountryCode>
+                  <Residential>1</Residential>
                </Address>
             </Recipient>
             <ShippingChargesPayment>
                <PaymentType>SENDER</PaymentType>
                <Payor>
                   <ResponsibleParty>
-                     <AccountNumber>INPUT YOUR INFORMATION</AccountNumber>
+                     <AccountNumber>{{ account_number }}</AccountNumber>
                      <Contact>
-                        <PersonName>Abhay_Recipient</PersonName>
-                        <EMailAddress>abhay_palaskar@syntelinc.com</EMailAddress>
+                        <PersonName>{{ name }}</PersonName>
+                        <EMailAddress>{{ email }}</EMailAddress>
                      </Contact>
                   </ResponsibleParty>
                </Payor>
             </ShippingChargesPayment>
+            <SpecialServicesRequested>
+               <SpecialServiceTypes>HOME_DELIVERY_PREMIUM</SpecialServiceTypes>
+               <HomeDeliveryPremiumDetail>
+                  <HomeDeliveryPremiumType>APPOINTMENT</HomeDeliveryPremiumType>
+                  <PhoneNumber>{{ number }}</PhoneNumber>
+               </HomeDeliveryPremiumDetail>
+            </SpecialServicesRequested>
             <LabelSpecification>
                <LabelFormatType>COMMON2D</LabelFormatType>
-               <ImageType>PNG</ImageType>
+               <ImageType>PDF</ImageType>
             </LabelSpecification>
             <RateRequestTypes>LIST</RateRequestTypes>
             <PackageCount>1</PackageCount>
@@ -98,5 +105,5 @@
             </RequestedPackageLineItems>
          </RequestedShipment>
       </ProcessShipmentRequest>
-   </soapenv:Body>
-</soapenv:Envelope>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
